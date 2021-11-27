@@ -178,8 +178,8 @@ for i in range(len(dSueldo)):
       dSueldo.loc[i,"Sueldo"]=0
     if Class=='hace':
       dSueldo.loc[i,"Sueldo"]=0
-ceros=0;
-contar=0.0;
+ceros=0
+contar=0.0
 for j in range(len(dSueldo)):
     Class = dSueldo.iloc[i,0]
     if ((j+1)%49) == 0:
@@ -187,7 +187,7 @@ for j in range(len(dSueldo)):
       for q in range(j+1):
         Clas = dSueldo.iloc[q,0]
         if Clas == 0:
-          ceros+=1;
+          ceros+=1
       for k in range(j+1):
         Clss = dSueldo.iloc[k,0]
         if Clss == 0:
@@ -306,10 +306,11 @@ feb = dfe.groupby(['Estado']).count()
 febe= feb.reset_index()
 feb = dfe.groupby(['Perfil']).count() 
 febe2= feb.reset_index()
+feb = dfe.groupby(['Fecha']).count() 
+febe3= feb.reset_index()
 #*****************************************************************************
 # Comienza graficacion
 #*****************************************************************************
-st.markdown("<img style='aling: center; url='ITSOEH_blanco.png'>", unsafe_allow_html=True)
 st.sidebar.subheader("Menu")
 st.sidebar.button("Click me")
 
@@ -363,6 +364,7 @@ st.title("Cantidad de Vacantes por Perfil por Estado")
 option = st.selectbox( 'Perfil a consultar',
 (febe2['Perfil']))
 st.write('Seleccionaste:', option)
+d=dfe[dfe.Perfil==option].groupby(['Estado']).count().idxmax()[0]
 f1 = dfe[dfe.Perfil==option].groupby(['Estado']).count()
 f1.pop("Vacantes_Empresa")
 f1.pop("Vacantes_Descripcion")
@@ -370,17 +372,46 @@ f1.pop("Perfil")
 f1.pop("Sueldo")
 f1.pop("Fecha")
 f1.pop("Estrellas")
-f1.columns=["Estados"] 
+f1.columns=["Vacantes"] 
 f=f1.reset_index()
-f.columns=["Perfil","Estado"] 
+f.columns=["Estado","Vacantes"] 
 f
-chart_data = pd.DataFrame(data = f1.Estados)
+st.write('El estado con mayor cantidad convocatorias de ', option," es ",d)
+chart_data = pd.DataFrame(data = f1.Vacantes)
 st.bar_chart(chart_data)
 st.vega_lite_chart(f, {
     'mark': { "type": "bar"},
      'encoding': {
-         'x': {'field': 'Perfil',"type": "ordinal"},
-         'y': {'field': 'Estado'},
-         'color': {'field': 'Perfil'},
+         'x': {'field': 'Estado',"type": "ordinal"},
+         'y': {'field': 'Vacantes'},
+         'color': {'field': 'Estado'},
+     },
+ })
+ # Grafica para mostrar cantidad de vacantes por perfil por cada estado
+st.title("Vacantes por dependiendo el dia de lanzamiento")
+option = st.selectbox( 'Dia a consutar (30 significa mas de un mes)',
+(febe3['Fecha']))
+st.write('Seleccionaste:', option)
+d=dfe[dfe.Fecha==option].groupby(['Perfil']).count().idxmax()[0]
+f1=dfe[dfe.Fecha==option].groupby(['Perfil']).count()
+f1.pop("Vacantes_Empresa")
+f1.pop("Vacantes_Descripcion")
+f1.pop("Fecha")
+f1.pop("Sueldo")
+f1.pop("Estrellas")
+f1.pop("Vacantes_name")
+f1.columns=["Vacantes"] 
+f=f1.reset_index()
+f.columns=["Perfil","Vacantes"] 
+f
+st.write('El estado con mayor cantidad convocatorias de ', option," es ",d)
+chart_data = pd.DataFrame(data = f1.Vacantes)
+st.bar_chart(chart_data)
+st.vega_lite_chart(f, {
+    'mark': { "type": "bar"},
+     'encoding': {
+         'x': {'field': 'Estado',"type": "ordinal"},
+         'y': {'field': 'Vacantes'},
+         'color': {'field': 'Estado'},
      },
  })
