@@ -163,6 +163,11 @@ for i in range(len(dSueldo)):
     tiempo2 =dSueldo.iloc[i,3]
     if tiempo2=='año':
       dSueldo.loc[i,"Sueldo"]=str(float(dSueldo.iloc[i,4])/12)
+    if tiempo=='semana':
+      dSueldo.loc[i,"Sueldo"]=str(float(dSueldo.iloc[i,4])*4)
+    tiempo2 =dSueldo.iloc[i,3]
+    if tiempo2=='semana':
+      dSueldo.loc[i,"Sueldo"]=str(float(dSueldo.iloc[i,4])*4)
 dSueldo.pop("num1")
 dSueldo.pop("mese")
 dSueldo.pop("num2")
@@ -173,6 +178,24 @@ for i in range(len(dSueldo)):
       dSueldo.loc[i,"Sueldo"]=0
     if Class=='hace':
       dSueldo.loc[i,"Sueldo"]=0
+ceros=0;
+contar=0.0;
+for j in range(len(dSueldo)):
+    Class = dSueldo.iloc[i,0]
+    if ((j+1)%49) == 0:
+      contar+=float(dSueldo.iloc[j,0])
+      for q in range(j+1):
+        Clas = dSueldo.iloc[q,0]
+        if Clas == 0:
+          ceros+=1;
+      for k in range(j+1):
+        Clss = dSueldo.iloc[k,0]
+        if Clss == 0:
+          dSueldo.loc[k,"Sueldo"]=contar/(49-ceros)
+      ceros=0
+      contar=0
+    else:
+      contar+=float(dSueldo.iloc[j,0])
 
       dfe=dfd.drop(['Vacantes_Lugar', 'Vacantes_Fecha', 'Vacantes_Sueldo','Vacantes_Estrellas'], axis=1)
 #df.insert(loc = 3,column="Estado", value=dLugar["Estado"])
