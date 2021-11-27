@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from urllib.error import URLError
 
 
-path = 'C:/ProyectoIntegrador'
+path = 'C:/Users/ADMINISTRADORR/Downloads/pro/ProyectoIntegrador'
 df15 = pd.read_csv(path + '/VacanteAnalistaDeDatos.csv')
 df1 = pd.read_csv(path + '/Vacantes_Tester.csv', encoding='latin-1')
 df2 = pd.read_csv(path + '/Vacantes_GerenteTI.csv',encoding='latin-1')
@@ -279,9 +279,10 @@ print(febe)
 
 #dfr=dLugar.query("Estado=='CDMX'")
 #dLugar.head(100)
-febe = dfe.groupby(['Estado']).count() 
-febe= febe.reset_index()
-
+feb = dfe.groupby(['Estado']).count() 
+febe= feb.reset_index()
+feb = dfe.groupby(['Perfil']).count() 
+febe2= feb.reset_index()
 #*****************************************************************************
 # Comienza graficacion
 #*****************************************************************************
@@ -330,6 +331,33 @@ st.vega_lite_chart(febe, {
      'encoding': {
          'x': {'field': 'Perfil',"type": "ordinal"},
          'y': {'field': 'Vacantes'},
+         'color': {'field': 'Perfil'},
+     },
+ })
+
+ # Grafica para mostrar cantidad de vacantes por perfil por cada estado
+st.title("Cantidad de Vacantes por Perfil por Estado")
+option = st.selectbox( 'Perfil a consultar',
+(febe2['Perfil']))
+st.write('Seleccionaste:', option)
+f1 = dfe[dfe.Perfil==option].groupby(['Estado']).count()
+f1.pop("Vacantes_Empresa")
+f1.pop("Vacantes_Descripcion")
+f1.pop("Perfil")
+f1.pop("Sueldo")
+f1.pop("Fecha")
+f1.pop("Estrellas")
+f1.columns=["Estados"] 
+f=f1.reset_index()
+f.columns=["Perfil","Estado"] 
+f
+chart_data = pd.DataFrame(data = f1.Estados)
+st.bar_chart(chart_data)
+st.vega_lite_chart(f, {
+    'mark': { "type": "bar"},
+     'encoding': {
+         'x': {'field': 'Perfil',"type": "ordinal"},
+         'y': {'field': 'Estado'},
          'color': {'field': 'Perfil'},
      },
  })
