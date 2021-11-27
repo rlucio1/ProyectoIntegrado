@@ -285,7 +285,6 @@ febe= febe.reset_index()
 #*****************************************************************************
 # Comienza graficacion
 #*****************************************************************************
-
 st.markdown("<img style='aling: center; url='ITSOEH_blanco.png'>", unsafe_allow_html=True)
 st.sidebar.subheader("Menu")
 st.sidebar.button("Click me")
@@ -294,6 +293,13 @@ st.subheader('Cantidad de vacantes en el dia')
 
 #Grafica de Vacantes en el dia
 dFs=dfe.groupby('Fecha').count()
+dFs.pop("Perfil")
+dFs.pop("Vacantes_name")
+dFs.pop("Vacantes_Descripcion")
+dFs.pop("Vacantes_Empresa")
+dFs.pop("Sueldo")
+dFs.pop("Estrellas")
+dFs.columns=["Vacantes"]
 # st.line_chart(data = dFs, x = "Fecha", y = "Perfil", color = "green")
 st.title("Cantidad de Convocatorias por dia")
 chart_data = pd.DataFrame(
@@ -301,12 +307,29 @@ chart_data = pd.DataFrame(
     )
 st.line_chart(chart_data)
 
-st.title("Promedio pagado por perfil")
-option = st.selectbox(
-'Perfil a consultar',
-(dfe['Perfil']))
+# Grafica para mostrar cantidad de vacantes por perfil por cada estado
+st.title("Cantidad de Vacantes por Perfil por Estado")
+option = st.selectbox( 'Perfil a consultar',
+(febe['Estado']))
 st.write('Seleccionaste:', option)
-# Grafica de promedio pagado por perfil
-d=pd.DataFrame(dfe.groupby(['Perfil'])['Sueldo'].sum()/49)
-chart_data = pd.DataFrame(data = d.index)
-st.area_chart(chart_data)
+febe1 = dfe[dfe.Estado==option].groupby(['Perfil']).count()
+febe1.pop("Vacantes_Empresa")
+febe1.pop("Vacantes_Descripcion")
+febe1.pop("Estado")
+febe1.pop("Sueldo")
+febe1.pop("Fecha")
+febe1.pop("Estrellas")
+febe1.columns=["Vacantes"] 
+febe=febe1.reset_index()
+febe.columns=["Perfil","Vacantes"] 
+febe
+chart_data = pd.DataFrame(data = febe1.Vacantes)
+st.bar_chart(chart_data)
+st.vega_lite_chart(febe, {
+    'mark': { "type": "bar"},
+     'encoding': {
+         'x': {'field': 'Perfil',"type": "ordinal"},
+         'y': {'field': 'Vacantes'},
+         'color': {'field': 'Perfil'},
+     },
+ })
