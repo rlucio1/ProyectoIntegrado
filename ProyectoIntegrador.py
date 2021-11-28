@@ -323,7 +323,6 @@ st.sidebar.caption("-Lucio de Jesus Rebeca")
 st.sidebar.caption("-Meza Jose Itzel")
 st.sidebar.caption("-Vazquez Nava Raul")
 st.subheader('Cantidad de vacantes en el dia')
-
 #Grafica de Vacantes en el dia
 dFs=dfe.groupby('Fecha').count()
 dFs.pop("Perfil")
@@ -355,6 +354,8 @@ febe1.pop("Estrellas")
 febe1.columns=["Vacantes"] 
 febe=febe1.reset_index()
 febe.columns=["Perfil","Vacantes"] 
+d= dfe.groupby(['Estado'])["Estado"].count().idxmax()
+st.write('El estado con mayor cantidad de perfiles es', d)
 febe
 chart_data = pd.DataFrame(data = febe1.Vacantes)
 st.bar_chart(chart_data)
@@ -453,5 +454,23 @@ st.vega_lite_chart(f, {
          'x': {'field': 'Empresas',"type": "ordinal"},
          'y': {'field': 'Estrellas'},
          'color': {'field': 'Empresas'},
+     }
+ })
+   #De acuerdo al perfil que seleccione va a mostrar las estrellas de las empresas que ofrecen ese perfil
+st.title("Promedio pagado por perfil")
+d=pd.DataFrame(dfe.groupby(['Perfil'])['Sueldo'].sum()/49)
+c=d["Sueldo"].idxmax()
+f=d["Sueldo"].idxmin()
+d = d.reset_index()
+c2=d["Sueldo"].idxmax()
+f2=d["Sueldo"].idxmin()
+st.write('El perfil mejor pagado es', c," con un sueldo promedio de ",d.iloc[c2,1])
+st.write('El perfil peor pagado es', f," con un sueldo promedio de ",d.iloc[f2,1])
+st.vega_lite_chart(d, {
+    'mark': { "type": "bar"},
+    'encoding': {
+         'x': {'field': 'Perfil',"type": "ordinal"},
+         'y': {'field': 'Sueldo'},
+         'color': {'field': 'Perfil'},
      }
  })
