@@ -56,7 +56,7 @@ with header:
 with dataset:
     st.header("Conjunto de datos")    
     st.text("Este es conjunto de datos que se usara en nuestro sistema")
-    st.write(df.head())
+    st.write(df)
 
 dEstrellas=pd.DataFrame(dfd["Vacantes_Estrellas"])
 dEstrellas.columns=["Estrellas"]
@@ -143,8 +143,7 @@ for feature in dSueldo:
   if dSueldo[feature].dtype=="object":
     dSueldo[feature]=dSueldo[feature].fillna("0")
   else:
-      dSueldo[feature] =dSueldo[feature].fillna(-1)
-dSueldo
+    dSueldo[feature] =dSueldo[feature].fillna(-1)
 columnas=[0,3]
 dSueldo=dSueldo.replace('\$','',regex=True)
 dSueldo=dSueldo.replace('\,','',regex=True)
@@ -306,14 +305,23 @@ feb = dfe.groupby(['Estado']).count()
 febe= feb.reset_index()
 feb = dfe.groupby(['Perfil']).count() 
 febe2= feb.reset_index()
+febw = dfe.groupby(['Perfil']).count()
+febe4= febw.reset_index()
 feb = dfe.groupby(['Fecha']).count() 
 febe3= feb.reset_index()
 #*****************************************************************************
 # Comienza graficacion
 #*****************************************************************************
-st.sidebar.subheader("Menu")
-st.sidebar.button("Click me")
+st.sidebar.image('ITSOEH_blanco.png', width=150)
+st.sidebar.subheader("Descripcion")
+st.sidebar.write("En la pagina web presentada se mostrara un analisis de los vacantes para el perfil de un Ingeniero"+
+"en Sistemas Computacionales, en la cual se podra consultar diferentes perfiles para el Ingeniero, y podra comparar datos"+
+"gracias a los cuales podra tomar una decision")
 
+st.sidebar.subheader("Integrantes:")
+st.sidebar.caption("-Lucio de Jesus Rebeca")
+st.sidebar.caption("-Meza Jose Itzel")
+st.sidebar.caption("-Vazquez Nava Raul")
 st.subheader('Cantidad de vacantes en el dia')
 
 #Grafica de Vacantes en el dia
@@ -409,9 +417,41 @@ chart_data = pd.DataFrame(data = f1.Vacantes)
 st.bar_chart(chart_data)
 st.vega_lite_chart(f, {
     'mark': { "type": "bar"},
-     'encoding': {
-         'x': {'field': 'Estado',"type": "ordinal"},
+    'encoding': {
+         'x': {'field': 'Perfil',"type": "ordinal"},
          'y': {'field': 'Vacantes'},
-         'color': {'field': 'Estado'},
-     },
+         'color': {'field': 'Perfil'},
+     }
+ })
+  #De acuerdo al perfil que seleccione va a mostrar las estrellas de las empresas que ofrecen ese perfil
+st.title("Estrellas de las empresas que ofrecen vacantes por perfil")
+st.write('Se quitan toda empresa con valoracion de 0')
+option1 = st.selectbox('Perfil a consultar ',
+(febe4['Perfil']))
+st.write('Seleccionaste:', option1)
+d=dfe[dfe.Perfil==option1]["Estrellas"].idxmax()
+c=dfe.iloc[d,2]
+f1=dfe[dfe.Perfil==option1]
+f1=f1[f1.Estrellas!=0]
+f1.pop("Vacantes_name")
+f1.pop("Perfil")
+f1.pop("Fecha")
+f1.pop("Sueldo")
+f1.pop("Estado")
+f1.pop("Vacantes_Descripcion")
+f1.set_index('Vacantes_Empresa', inplace = True)
+f=f1.reset_index()
+f
+f.columns=["Empresas","Estrellas"] 
+
+st.write('Empresa con mayor valoracion por parte del perfil', option1," es ",c)
+chart_data = pd.DataFrame(data = f1.Estrellas)
+st.bar_chart(chart_data)
+st.vega_lite_chart(f, {
+    'mark': { "type": "bar"},
+    'encoding': {
+         'x': {'field': 'Empresas',"type": "ordinal"},
+         'y': {'field': 'Estrellas'},
+         'color': {'field': 'Empresas'},
+     }
  })
