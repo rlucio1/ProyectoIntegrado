@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from urllib.error import URLError
 
 
-path = 'C:/Users/ADMINISTRADORR/Downloads/pro/ProyectoIntegrador'
+path = 'C:/Users/itzel/OneDrive/Escritorio/clon2/ProyectoIntegrador'
 df15 = pd.read_csv(path + '/VacanteAnalistaDeDatos.csv')
 df1 = pd.read_csv(path + '/Vacantes_Tester.csv', encoding='latin-1')
 df2 = pd.read_csv(path + '/Vacantes_GerenteTI.csv',encoding='latin-1')
@@ -51,11 +51,11 @@ with header:
   with col3:
       st.image("isic.png", width=90)
  
-  st.header("Ciencia de Datos aplicada al analisis de vacantes del area de TI")
+  st.header("Ciencia de Datos aplicada al análisis de vacantes del área de TI")
   
 with dataset:
     st.header("Conjunto de datos")    
-    st.text("Este es conjunto de datos que se usara en nuestro sistema")
+    st.text("Este es conjunto de datos que se usará en nuestro sistema")
     st.write(df)
 
 dEstrellas=pd.DataFrame(dfd["Vacantes_Estrellas"])
@@ -313,16 +313,16 @@ febe3= feb.reset_index()
 # Comienza graficacion
 #*****************************************************************************
 st.sidebar.image('ITSOEH_blanco.png', width=150)
-st.sidebar.subheader("Descripcion")
-st.sidebar.write("En la pagina web presentada se mostrara un analisis de los vacantes para el perfil de un Ingeniero"+
-"en Sistemas Computacionales, en la cual se podra consultar diferentes perfiles para el Ingeniero, y podra comparar datos"+
-"gracias a los cuales podra tomar una decision")
+st.sidebar.subheader("Descripción")
+st.sidebar.write("En la página web presentada se mostrará un análisis de los vacantes para el perfil de un Ingeniero"+
+"en Sistemas Computacionales, en la cual se podrá consultar diferentes perfiles para el Ingeniero, y podrá comparar datos"+
+" gracias a los cuales podrá tomar una decisión")
 
 st.sidebar.subheader("Integrantes:")
-st.sidebar.caption("-Lucio de Jesus Rebeca")
-st.sidebar.caption("-Meza Jose Itzel")
-st.sidebar.caption("-Vazquez Nava Raul")
-st.subheader('Cantidad de vacantes en el dia')
+st.sidebar.caption("- Lucio de Jesús Rebeca")
+st.sidebar.caption("- Meza José Itzel")
+st.sidebar.caption("- Vázquez Nava Raúl")
+
 #Grafica de Vacantes en el dia
 dFs=dfe.groupby('Fecha').count()
 dFs.pop("Perfil")
@@ -333,14 +333,14 @@ dFs.pop("Sueldo")
 dFs.pop("Estrellas")
 dFs.columns=["Vacantes"]
 # st.line_chart(data = dFs, x = "Fecha", y = "Perfil", color = "green")
-st.title("Cantidad de Convocatorias por dia")
+st.title("Cantidad de Convocatorias publicadas por día")
 chart_data = pd.DataFrame(
     data = dFs
     )
 st.line_chart(chart_data)
 
 # Grafica para mostrar cantidad de vacantes por perfil por cada estado
-st.title("Cantidad de Vacantes por Perfil por Estado")
+st.title("Cantidad de Vacantes disponibles por Perfil y por Estado")
 option = st.selectbox( 'Perfil a consultar',
 (febe['Estado']))
 st.write('Seleccionaste:', option)
@@ -369,7 +369,7 @@ st.vega_lite_chart(febe, {
  })
 
  # Grafica para mostrar cantidad de vacantes por perfil por cada estado
-st.title("Cantidad de Vacantes por Perfil por Estado")
+st.title("Estado con mayor número de vacantes en México")
 option = st.selectbox( 'Perfil a consultar',
 (febe2['Perfil']))
 st.write('Seleccionaste:', option)
@@ -397,7 +397,7 @@ st.vega_lite_chart(f, {
      },
  })
  # Grafica para mostrar cantidad de vacantes por perfil por cada estado
-st.title("Vacantes por dependiendo el dia de lanzamiento")
+st.title("Vacantes publicadas en el mes por día")
 option = st.selectbox( 'Dia a consutar (30 significa mas de un mes)',
 (febe3['Fecha']))
 st.write('Seleccionaste:', option)
@@ -425,8 +425,8 @@ st.vega_lite_chart(f, {
      }
  })
   #De acuerdo al perfil que seleccione va a mostrar las estrellas de las empresas que ofrecen ese perfil
-st.title("Estrellas de las empresas que ofrecen vacantes por perfil")
-st.write('Se quitan toda empresa con valoracion de 0')
+st.title("Valoración de las empresas que ofrecen vacantes de cada perfil")
+st.write('Se quita toda empresa con valoración de 0')
 option1 = st.selectbox('Perfil a consultar ',
 (febe4['Perfil']))
 st.write('Seleccionaste:', option1)
@@ -445,7 +445,7 @@ f=f1.reset_index()
 f
 f.columns=["Empresas","Estrellas"] 
 
-st.write('Empresa con mayor valoracion por parte del perfil', option1," es ",c)
+st.write('Empresa con mayor valoración por parte del perfil', option1," es ",c)
 chart_data = pd.DataFrame(data = f1.Estrellas)
 st.bar_chart(chart_data)
 st.vega_lite_chart(f, {
@@ -457,7 +457,7 @@ st.vega_lite_chart(f, {
      }
  })
    #De acuerdo al perfil que seleccione va a mostrar las estrellas de las empresas que ofrecen ese perfil
-st.title("Promedio pagado por perfil")
+st.title("Sueldo promedio pagado por cada perfil")
 d=pd.DataFrame(dfe.groupby(['Perfil'])['Sueldo'].sum()/49)
 c=d["Sueldo"].idxmax()
 f=d["Sueldo"].idxmin()
